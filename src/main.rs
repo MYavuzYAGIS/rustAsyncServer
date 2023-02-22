@@ -7,4 +7,10 @@ const ECHO_SERVER_ADDRESS: &str = "localhost:1234";
 fn main() {
     //connection
     println!("connecting to {}", ECHO_SERVER_ADDRESS);
+
+    if let Ok(mut stream) = TcpStream::connect(ECHO_SERVER_ADDRESS) {
+        println!("connected to {}", ECHO_SERVER_ADDRESS);
+    } else {
+        println!("Failed to connect to {}", ECHO_SERVER_ADDRESS);
+    }
 }
