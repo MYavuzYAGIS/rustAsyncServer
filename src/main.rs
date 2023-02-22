@@ -1,14 +1,13 @@
 use std::f32::consts::E;
-use std::io::prelude::*;
-use std::net::TcpStream;
-
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::net::TcpStream;
 const ECHO_SERVER_ADDRESS: &str = "localhost:1234";
-
-fn main() {
+#[tokio::main]
+async fn main() {
     //connection
     println!("connecting to {}", ECHO_SERVER_ADDRESS);
 
-    if let Ok(mut stream) = TcpStream::connect(ECHO_SERVER_ADDRESS) {
+    if let Ok(mut stream) = TcpStream::connect(ECHO_SERVER_ADDRESS).await {
         //connected
         println!(
             "connected to {}:{}",
@@ -18,13 +17,12 @@ fn main() {
 
         //write to socket
         let message: &str = "Hello World!";
-        let _ = stream.write(message.as_bytes());
-        let _ = stream.flush();
+        let _ = stream.write_all(message.as_bytes()).await;
         println!("Sent: {}", message);
 
         // receive the result as client.
         let mut buffer = [0; 2048];
-        let len = stream.read(&mut buffer).unwrap();
+        let len = stream.read(&mut buffer).await.unwrap();
         let message = String::from_utf8_lossy(&buffer);
         println!("received {}", message);
     } else {
