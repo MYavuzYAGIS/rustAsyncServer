@@ -24,7 +24,7 @@ fn main() {
 
         // receive the result as client.
         let mut buffer = [0; 2048];
-        let len = stream.read(&buffer).unwrap();
+        let len = stream.read(&mut buffer).unwrap();
         let message = String::from_utf8_lossy(&buffer);
         println!("received {}", message);
     } else {
